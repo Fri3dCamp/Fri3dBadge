@@ -16,10 +16,7 @@ Fri3dMatrix::Fri3dMatrix() {
   digitalWrite( DATA_PIN, 0 );
   pinMode( ENABLE_PIN, OUTPUT );
   digitalWrite( ENABLE_PIN, 0 );
-  
-  for( int y = 0; y < 5; y++ )
-    for( int x = 0; x < 14; x++ )
-      buffer[ y ][ x ] = 0;
+  clear( 0 );
 }
 
 void Fri3dMatrix::shiftIntoRegister( int b ) const {
@@ -34,6 +31,12 @@ void Fri3dMatrix::setPixel( int x, int y, int value ) {
 
 int Fri3dMatrix::getPixel( int x, int y ) const {
   return buffer[ y ][ x ];
+}
+
+void Fri3dMatrix::clear( int value ) {
+  for( int y = 0; y < 5; y++ )
+    for( int x = 0; x < 14; x++ )
+      setPixel( x, y, value );
 }
 
 void Fri3dMatrix::render() const {
