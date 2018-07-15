@@ -13,6 +13,7 @@ public:
   Fri3dMatrix();
   void setPixel( int x, int y, int value );
   int getPixel( int x, int y ) const;
+  void drawCharacter( int x_offset , char c );
   void render() const;
 protected:
   int buffer[5][14];
