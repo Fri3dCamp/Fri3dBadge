@@ -14,7 +14,7 @@ run get.exe, found in the “esp32/tools” folder.   !! Run this as an administ
 ### Mac and Linux users
 Download the repo from https://github.com/espressif/arduino-esp32 as a .ZIP file and unzip it to an espressif/esp32 directory in your Home directory.
 
-should run the tools/get.py python script to download the tools. Using a terminal, navigate to the esp32/tools folder. Then type: "python get.py"
+run the tools/get.py python script to download the tools. Using a terminal, navigate to the esp32/tools folder. Then type: "python get.py"
 
 The “get.py” python script will download the Xtensa GNU tools and the ESP32 software development kit (SDK), and unzip them to the proper location. You should see a few new folders in the “tools” directory, including “sdk” and “xtensa-esp32-elf” once it’s done.
 
