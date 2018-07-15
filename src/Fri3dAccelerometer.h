@@ -2,8 +2,8 @@
 #ifndef Fri3dAccelerometer_h
 #define Fri3dAccelerometer_h
 
-#include <AdaFruit_ADXL345_U.h>
-#include <Adafruit_Sensor.h>
+#include "Adafruit_ADXL345_U.h"
+#include "Adafruit_Sensor.h"
 
 // library interface description
 class Fri3dAccelerometer {
