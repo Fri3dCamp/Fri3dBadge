@@ -18,7 +18,7 @@ Fri3dMatrix::Fri3dMatrix() {
   digitalWrite( ENABLE_PIN, 0 );
   
   for( int y = 0; y < 5; y++ )
-    for( int x = 0; x < 24; x++ )
+    for( int x = 0; x < 14; x++ )
       buffer[ y ][ x ] = 0;
 }
 
@@ -41,7 +41,7 @@ void Fri3dMatrix::render() const {
     
     // send right eye
     for( int i = 0; i < 7; i++ ) {
-      shiftIntoRegister( 1 - buffer[ row ][ 6 - i ] );
+      shiftIntoRegister( 1 - buffer[ row ][ 13 - i ] );
     }
     for( int i = 0; i < 5; i++ ) {
       if( row == i )
@@ -52,7 +52,7 @@ void Fri3dMatrix::render() const {
     
     // send left eye
     for( int i = 0; i < 7; i++ ) {
-      shiftIntoRegister( 1 - buffer[ row ][ 13 - i ] );
+      shiftIntoRegister( 1 - buffer[ row ][ 6 - i ] );
     }
     for( int i = 0; i < 5; i++ ) {
       if( row == i )

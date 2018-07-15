@@ -15,7 +15,7 @@ public:
   int getPixel( int x, int y ) const;
   void render() const;
 protected:
-  int buffer[5][12];
+  int buffer[5][14];
   void shiftIntoRegister( int b ) const;
 };
 
