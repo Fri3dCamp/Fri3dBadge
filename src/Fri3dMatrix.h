@@ -2,6 +2,9 @@
 #ifndef Fri3dMatrix_h
 #define Fri3dMatrix_h
 
+#include <Arduino.h>
+#include <String>
+
 #define LATCH_PIN 15
 #define CLOCK_PIN 4
 #define DATA_PIN 2
@@ -11,11 +14,14 @@
 class Fri3dMatrix {
 public:
   Fri3dMatrix();
-  
+
   void setPixel( int x, int y, int value );
   int getPixel( int x, int y ) const;
-  void drawCharacter( int x_offset , char c );
+
   void clear( int value = 0 );
+  
+  void drawCharacter( int x_offset , char c );
+  void drawString( int x_offset , String s );
   
   void render( int delay = 0 ) const;
   void startRenderThread();

@@ -1,6 +1,7 @@
 // include this library's description file
 #include "Fri3dMatrix.h"
 #include "Arduino.h"
+#include <String>
 
 uint8_t font[ 96 * 3 ] = {
   0x00, 0x00, 0x00,      // (space)
@@ -115,12 +116,6 @@ Fri3dMatrix::Fri3dMatrix() {
   startRenderThread();
 }
 
-void Fri3dMatrix::shiftIntoRegister( int b ) const {
-  digitalWrite( DATA_PIN, b );
-  digitalWrite( CLOCK_PIN, 1 );
-  digitalWrite( CLOCK_PIN, 0 );
-}
-
 void Fri3dMatrix::setPixel( int x, int y, int value ) {
   if( ( x >= 0 ) && ( x < 14 ) && ( y >= 0 ) && ( y < 5 ) )
     buffer[ y ][ x ] = value;
@@ -136,24 +131,21 @@ void Fri3dMatrix::clear( int value ) {
       setPixel( x, y, value );
 }
 
-void renderThread( void * parameter )
-{
-  Fri3dMatrix* matrix = (Fri3dMatrix*)parameter;
-  for (;;) {
-    matrix->render( 1 );
+void Fri3dMatrix::drawCharacter(int x_offset, char c) {
+  for( int x = 0; x < 3; x++ )
+  {
+    uint8_t row = font[ ( c - 32 ) * 3 + x ];
+    for( int y = 0; y < 5; y++ ) {
+      int color = ( row & ( 1 << y ) ) >> y;
+      setPixel( x + x_offset, y, color );
+    }
   }
 }
 
-TaskHandle_t renderTask;
-void Fri3dMatrix::startRenderThread() {
-  xTaskCreatePinnedToCore(
-    renderThread,             /* Task function. */
-    "renderThread",           /* name of task. */
-    1000,                     /* Stack size of task */
-    this,                     /* parameter of the task */
-    1,                        /* priority of the task */
-    &(renderTask),              /* Task handle to keep track of created task */
-    0);                       /* Core */
+void Fri3dMatrix::drawString(int x_offset, String s) {
+  for( int i = 0; i < s.length(); i++ ) {
+    drawCharacter( x_offset + i * 4, s[ i ] );
+  }
 }
 
 void Fri3dMatrix::render( int delay ) const {
@@ -188,14 +180,29 @@ void Fri3dMatrix::render( int delay ) const {
   }
 }
 
-void Fri3dMatrix::drawCharacter(int x_offset, char c) {
-  for(int x = 0;x<3;x++)
-  {
-    uint8_t row = font[ ( c - 32 ) * 3 + x ];
-    for( int y = 0; y < 5; y++ ) {
-      int color = ( row & ( 1 << y ) ) >> y;
-      setPixel( x + x_offset, y, color );
-    }
+void renderThread( void * parameter )
+{
+  Fri3dMatrix* matrix = (Fri3dMatrix*)parameter;
+  for (;;) {
+    matrix->render( 1 );
   }
+}
+
+TaskHandle_t renderTask;
+void Fri3dMatrix::startRenderThread() {
+  xTaskCreatePinnedToCore(
+    renderThread,             /* Task function. */
+    "renderThread",           /* name of task. */
+    1000,                     /* Stack size of task */
+    this,                     /* parameter of the task */
+    1,                        /* priority of the task */
+    &(renderTask),              /* Task handle to keep track of created task */
+    0);                       /* Core */
+}
+
+void Fri3dMatrix::shiftIntoRegister( int b ) const {
+  digitalWrite( DATA_PIN, b );
+  digitalWrite( CLOCK_PIN, 1 );
+  digitalWrite( CLOCK_PIN, 0 );
 }
 
