@@ -25,3 +25,8 @@ Explore the examples for sample Arduino code for the Fri3d Camp badge unnder `Fi
 ## Libraries
 
 * `Fri3dMatrix` supports the LED matrices with `putPixel`, `getPixel` and `render` functions. See the `matrix` example for a basic setup.
+
+# Problems & solutions
+
+### Uploading the badge does not work
+* Make sure the battery is switched off. If this does not work unplug the badge from your pc and plug it back in. Now it should work.
