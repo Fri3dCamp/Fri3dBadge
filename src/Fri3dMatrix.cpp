@@ -121,7 +121,8 @@ void Fri3dMatrix::shiftIntoRegister( int b ) const {
 }
 
 void Fri3dMatrix::setPixel( int x, int y, int value ) {
-  buffer[ y ][ x ] = value;
+  if( ( x >= 0 ) && ( x < 14 ) && ( y >= 0 ) && ( y < 5 ) )
+    buffer[ y ][ x ] = value;
 }
 
 int Fri3dMatrix::getPixel( int x, int y ) const {
