@@ -1,18 +1,22 @@
-# Installation
+# Arduino Library for the Fri3d Camp Badge
 
-## Arduino Library for the Fri3d Camp badge
+This library offers simple interfaces to the hardware peripherals on the Fri3d Camp Badge so you can program the badge using the Arduino IDE and related programming environments. You can find more information on the badge at http://fri3d.be/badge
+
+## Installation
+
+### Arduino Library for the Fri3d Camp badge
 
 Download this repo as a .ZIP file and install it, similar to other Arduino libraries: https://www.arduino.cc/en/Guide/Libraries#toc4
 
-## ESP32 Board for the Fri3d Camp badge
+### ESP32 Board for the Fri3d Camp badge
 
-### Windows users
+#### Windows users
 
 Download the repo from https://github.com/espressif/arduino-esp32 as a .ZIP file and unzip it to an `espressif/esp32` directory in your `Mydocuments\Arduino\hardware` folder.
 
 Run `get.exe` (make sure to run this as administrator), found in the `esp32/tools` folder.
 
-### Mac and Linux users
+#### Mac and Linux users
 
 Download the repo from https://github.com/espressif/arduino-esp32 as a .ZIP file and unzip it to an `espressif/esp32` directory in your Home directory.
 
