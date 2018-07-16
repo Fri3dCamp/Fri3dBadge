@@ -1,7 +1,6 @@
 // include this library's description file
 #include "Fri3dMatrix.h"
 #include "Arduino.h"
-#include <String>
 
 uint8_t font[ 96 * 3 ] = {
   0x00, 0x00, 0x00,      // (space)

@@ -3,7 +3,6 @@
 #define Fri3dMatrix_h
 
 #include <Arduino.h>
-#include <String>
 
 #define LATCH_PIN 15
 #define CLOCK_PIN 4
