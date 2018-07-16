@@ -47,8 +47,7 @@ void loop()
   matrix.drawCharacter(4,formattedTime[1]);
   matrix.drawCharacter(7,formattedTime[3]);
   matrix.drawCharacter(11,formattedTime[4]);
-  for( int i = 0; i < 10000; i++ )//TODO update when moved to tread change this 
-    matrix.render();
+  delay(500);
 }
 
 
