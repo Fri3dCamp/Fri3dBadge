@@ -11,14 +11,19 @@
 class Fri3dMatrix {
 public:
   Fri3dMatrix();
+  
   void setPixel( int x, int y, int value );
   int getPixel( int x, int y ) const;
   void drawCharacter( int x_offset , char c );
   void clear( int value = 0 );
-  void render() const;
+  
+  void render( int delay = 0 ) const;
+  void startRenderThread();
+  
 protected:
   int buffer[5][14];
   void shiftIntoRegister( int b ) const;
+
 };
 
 #endif

@@ -112,6 +112,7 @@ Fri3dMatrix::Fri3dMatrix() {
   pinMode( ENABLE_PIN, OUTPUT );
   digitalWrite( ENABLE_PIN, 0 );
   clear( 0 );
+  startRenderThread();
 }
 
 void Fri3dMatrix::shiftIntoRegister( int b ) const {
@@ -135,7 +136,27 @@ void Fri3dMatrix::clear( int value ) {
       setPixel( x, y, value );
 }
 
-void Fri3dMatrix::render() const {
+void renderThread( void * parameter )
+{
+  Fri3dMatrix* matrix = (Fri3dMatrix*)parameter;
+  for (;;) {
+    matrix->render( 1 );
+  }
+}
+
+TaskHandle_t renderTask;
+void Fri3dMatrix::startRenderThread() {
+  xTaskCreatePinnedToCore(
+    renderThread,             /* Task function. */
+    "renderThread",           /* name of task. */
+    1000,                     /* Stack size of task */
+    this,                     /* parameter of the task */
+    1,                        /* priority of the task */
+    &(renderTask),              /* Task handle to keep track of created task */
+    0);                       /* Core */
+}
+
+void Fri3dMatrix::render( int delay ) const {
   for( int row = 0; row < 5; row++ ) {
     
     // send right eye
@@ -162,6 +183,8 @@ void Fri3dMatrix::render() const {
       
     digitalWrite( LATCH_PIN, 0 );
     digitalWrite( LATCH_PIN, 1 );
+    
+    vTaskDelay( delay );
   }
 }
 

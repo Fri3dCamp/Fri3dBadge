@@ -15,6 +15,5 @@ void loop() {
   for( int i = 0; i < s.length(); i++ ) {
     matrix.drawCharacter( i * 4 - counter, s[ i ] );
   }
-  for( int i = 0; i < 2500; i++ )
-    matrix.render();
+  delay(100);
 }

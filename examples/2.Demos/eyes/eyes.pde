@@ -39,8 +39,6 @@ void loop() {
     
   }
 
-  for( int i = 0; i < 2000; i++ ) {
-    matrix.render();
-  }
+  delay(80);
 
 }
