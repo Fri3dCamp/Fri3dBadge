@@ -130,20 +130,21 @@ void Fri3dMatrix::clear( int value ) {
       setPixel( x, y, value );
 }
 
-void Fri3dMatrix::drawCharacter(int x_offset, char c) {
+void Fri3dMatrix::drawCharacter(int x_offset, char c, int value) {
   for( int x = 0; x < 3; x++ )
   {
     uint8_t row = font[ ( c - 32 ) * 3 + x ];
     for( int y = 0; y < 5; y++ ) {
       int color = ( row & ( 1 << y ) ) >> y;
-      setPixel( x + x_offset, y, color );
+      if( color )
+        setPixel( x + x_offset, y, value );
     }
   }
 }
 
-void Fri3dMatrix::drawString(int x_offset, String s) {
+void Fri3dMatrix::drawString(int x_offset, String s, int value) {
   for( int i = 0; i < s.length(); i++ ) {
-    drawCharacter( x_offset + i * 4, s[ i ] );
+    drawCharacter( x_offset + i * 4, s[ i ], value );
   }
 }
 

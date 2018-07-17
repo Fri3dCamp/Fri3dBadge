@@ -19,8 +19,8 @@ public:
 
   void clear( int value = 0 );
   
-  void drawCharacter( int x_offset , char c );
-  void drawString( int x_offset , String s );
+  void drawCharacter( int x_offset , char c, int value = 1 );
+  void drawString( int x_offset , String s, int value = 1 );
   
   void render( int delay = 0 ) const;
   void startRenderThread();
