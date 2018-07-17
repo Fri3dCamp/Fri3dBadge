@@ -24,6 +24,7 @@ public:
   
   void render( int delay = 0 ) const;
   void startRenderThread();
+  void stopRenderThread();
   
 protected:
   int buffer[5][14];

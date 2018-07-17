@@ -199,6 +199,10 @@ void Fri3dMatrix::startRenderThread() {
     0);                       /* Core */
 }
 
+void Fri3dMatrix::stopRenderThread() {
+  vTaskDelete(renderTask);
+}
+
 void Fri3dMatrix::shiftIntoRegister( int b ) const {
   digitalWrite( DATA_PIN, b );
   digitalWrite( CLOCK_PIN, 1 );
