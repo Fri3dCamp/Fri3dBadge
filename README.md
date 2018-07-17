@@ -46,7 +46,10 @@ This library offers various classes to easily interface with the peripherals on 
 * `Fri3dMatrix` supports the LED matrices with `setPixel` and `getPixel` functions on a 14x5 screen buffer. The matrix runs a thread in the background to render the LED matrix. See the `1.Basics/matrix` example for a basic setup and the `1.Basics/font` example for a scrolling text demo.
 * `Fri3dServoJewel` supports servo motors, using the Servo Jewel add-on board that comes with the Fri3d Camp robot kit. Check `3.Jewels/OneServo` and `3.Jewels/TwoServos` examples for demos.
 
-# Problems & solutions
+## Problems & solutions
 
 ### Uploading the badge does not work
 * Make sure the battery is switched off. If this does not work unplug the badge from your pc and plug it back in. Now it should work.
+
+### I get errors concerning multiple wifi stacks
+* Make sure you have the latest version of arduino IDE installed, most of the development was done using version 1.8.5
