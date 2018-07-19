@@ -9,8 +9,8 @@ char* ssid     = "fri3d-badge";
 char* password = "fri3d-badge";
 
  
-#define NTP_OFFSET 0 * 60 * 60 // In seconds
-#define NTP_INTERVAL 60 * 1000 // In miliseconds
+#define NTP_OFFSET 2 * 60 * 60 // Time offset to GMT in seconds
+#define NTP_INTERVAL 120 * 1000 // Time in between server calls in milliseconds
 #define NTP_ADDRESS "0.pool.ntp.org"
  
 Fri3dMatrix matrix = Fri3dMatrix();
@@ -34,11 +34,11 @@ void setup()
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
   timeClient.begin();
-  timeClient.setTimeOffset(7200);//this adds 2 hours to get in the time zone of Fri3d camp
 }
  
 void loop()
 {
+  matrix.clear(0);
   timeClient.update();
   String formattedTime = timeClient.getFormattedTime();
   Serial.println(formattedTime); 
