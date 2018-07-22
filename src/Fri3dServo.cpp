@@ -63,6 +63,7 @@ bool Fri3dServo::attach(int pin, int channel,
     _maxPulseWidth = maxPulseWidth;
 
     ledcSetup(_channel, 50, 16); // channel X, 50 Hz, 16-bit depth
+    // ledcSetup(_channel, 60, 16); // channel X, 50 Hz, 16-bit depth
     ledcAttachPin(_pin, _channel);
     return true;
 }
