@@ -82,11 +82,11 @@ void renderFoxEyes() {
     matrix.setPixel( x + 6, 2, 1 );
     matrix.setPixel( x + 7, 2, 1 );
     matrix.setPixel( x + 8, 2, 1 );
-    frame_blink = frame_blink + rand() % 10 + 75;
+    frame_blink = frame_blink + rand() % 90 + 30;
   }
   frame++;
-  if( rand() % 1000 )
-    frame_blink = frame + rand() % 10 + 75;
+  if( frame > frame_blink )
+    frame_blink = frame + rand() % 90 + 30;
   delay(50);
 }
 
