@@ -48,6 +48,12 @@ Fri3dButtons::debounceButton( int button ) {
   }
 }
 
+int 
+Fri3dButtons::getDebouncedState( int button ) {
+  return state[button];
+}
+
+
 void 
 Fri3dButtons::setPressedCallback( int button, void (*callback)() ) {
   pressedCallbacks[button] = callback;

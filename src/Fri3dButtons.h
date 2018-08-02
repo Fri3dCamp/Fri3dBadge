@@ -22,6 +22,7 @@ private:
   void (*pressedCallbacks[2])();
   void (*releasedCallbacks[2])();
 public:
+  int getDebouncedState( int button );
   void setPressedCallback( int button, void (*callback)() );
   void setReleasedCallback( int button, void (*callback)() );
   void startDebounceThread();

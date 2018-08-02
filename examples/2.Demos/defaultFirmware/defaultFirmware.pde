@@ -2,19 +2,31 @@
 // it is used both for testing the badge's hardware and to serve as a default demo of what the badge can do
 // if you want to learn how to program the badge, it is recommended to look at the basic examples first
 
-#include "button.h"
-
 #include <Fri3dMatrix.h>
 #include <Fri3dAccelerometer.h>
 #include <Fri3dBuzzer.h>
+#include <Fri3dButtons.h>
 
 Fri3dAccelerometer accel = Fri3dAccelerometer();
 Fri3dMatrix matrix = Fri3dMatrix();
 Fri3dBuzzer buzzer = Fri3dBuzzer();
+Fri3dButtons buttons = Fri3dButtons();
 
-// the Button class supports debouncing
-Button button0 = Button( 0 );
-Button button1 = Button( 1 );
+// state machine
+
+enum State { STATE_EYES, STATE_TEXT };
+State state = STATE_EYES;
+
+void nextState() {
+  switch( state ) {
+    case STATE_EYES:
+      state = STATE_TEXT;
+    break;
+    case STATE_TEXT:
+      state = STATE_EYES;
+    break;
+  }
+}
 
 void setup() {
   Serial.begin(9600);
@@ -24,6 +36,9 @@ void setup() {
   buzzer.setFrequency( 500 );
   delay( 120 );
   buzzer.setVolume(0);
+  buttons.setReleasedCallback( 0, nextState );
+  buttons.setReleasedCallback( 1, nextState );
+  buttons.startDebounceThread();
 }
 
 int frame = 0;
@@ -70,6 +85,8 @@ void renderFoxEyes() {
     frame_blink = frame_blink + rand() % 10 + 75;
   }
   frame++;
+  if( rand() % 1000 )
+    frame_blink = frame + rand() % 10 + 75;
   delay(50);
 }
 
@@ -95,14 +112,8 @@ void renderPixels() {
   delay(10);
 }
 
-enum State { STATE_EYES, STATE_TEXT };
-State state = STATE_EYES;
-
-int brightness = HIGH;
 void loop() {
-  int button0state = button0.check();
-  int button1state = button1.check();
-  if( button0state == BUTTON_HIGH )
+  if( buttons.getDebouncedState(0) )
     renderPixels();
   else
     switch(state) {
@@ -113,11 +124,4 @@ void loop() {
         renderText(); 
       break;
     }
-  if( ( button0state == BUTTON_RELEASED ) || ( button1state == BUTTON_RELEASED ) ) {
-    Serial.println("BOO");
-    if( state == STATE_EYES )
-      state = STATE_TEXT;
-    else if( state == STATE_TEXT )
-      state = STATE_EYES;
-  }
 }
