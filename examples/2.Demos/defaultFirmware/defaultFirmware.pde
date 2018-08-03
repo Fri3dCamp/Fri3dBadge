@@ -28,18 +28,63 @@ void nextState() {
   }
 }
 
+// BLE Beacon advertises itself as "fri3d" + its unique ID
+
+#include <BLEDevice.h>
+#include <BLEUtils.h>
+#include <BLEServer.h>
+
+#define SERVICE_UUID        "111fc111-1fb5-459e-8fcc-c5c9c331914b"
+#define CHARACTERISTIC_UUID "11154111-36e1-4688-b7f5-ea07361b26a8"
+
+uint64_t chipid; 
+
+void startBLEBeacon() {
+    Serial.println("===== Setup the Beacon... =====");
+
+  chipid = chipid=ESP.getEfuseMac();
+
+  String fri3d = "fri3d";
+  String fri3dmac = fri3d + String((uint32_t)chipid);
+
+  Serial.println("My beacon name is: " + fri3dmac);
+
+  BLEDevice::init(fri3dmac.c_str());
+  BLEServer *pServer = BLEDevice::createServer();
+  BLEService *pService = pServer->createService(SERVICE_UUID);
+  BLECharacteristic *pCharacteristic = pService->createCharacteristic(
+                                         CHARACTERISTIC_UUID,
+                                         BLECharacteristic::PROPERTY_READ |
+                                         BLECharacteristic::PROPERTY_WRITE
+                                       );
+
+  pCharacteristic->setValue("Hello World says Neil");
+  pService->start();
+  BLEAdvertising *pAdvertising = pServer->getAdvertising();
+  pAdvertising->start();
+  Serial.println("Beacon operational! You should be able to see it on your Beacon scanner, for example on your phone!");
+}
+
+// SETUP, ARDUINO STYLIE
+
 void setup() {
   Serial.begin(9600);
+  
   buzzer.setVolume( 255 );
   buzzer.setFrequency( 600 );
   delay( 120 );
   buzzer.setFrequency( 500 );
   delay( 120 );
   buzzer.setVolume(0);
+  
   buttons.setReleasedCallback( 0, nextState );
   buttons.setReleasedCallback( 1, nextState );
   buttons.startDebounceThread();
+
+  startBLEBeacon();
 }
+
+// RENDER FOX EYES WITH ACCELEROMETER
 
 int frame = 0;
 int frame_blink = 40;
@@ -90,6 +135,8 @@ void renderFoxEyes() {
   delay(50);
 }
 
+// FONT SCROLLY
+
 String s = "FRI3D CAMP 2018";
 void renderText() {
   if( frame >= (int)( s.length() ) * 4 )
@@ -99,6 +146,8 @@ void renderText() {
   delay(100);
   frame++;
 }
+
+// PIXEL TEST
 
 void renderPixels() {
   if( frame < 70 )
@@ -111,6 +160,8 @@ void renderPixels() {
   }
   delay(10);
 }
+
+// MAIN LOOP
 
 void loop() {
   if( buttons.getDebouncedState(0) )
