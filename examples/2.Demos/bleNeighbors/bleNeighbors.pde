@@ -31,30 +31,30 @@ class MyAdvertisedDeviceCallbacks: public BLEAdvertisedDeviceCallbacks {
 
 Fri3dMatrix matrix = Fri3dMatrix();
 
-void displayNumbers( int left , int right ) {
+void displayNumber( int number ) {
   matrix.clear();
-  if( left < 10 )
-    matrix.drawString( 4, String( left ) );
+  if( number < 10 )
+    matrix.drawString( 11, String( number ) );
+  else if( number < 100 )
+    matrix.drawString( 7, String( number ) );
   else
-    matrix.drawString( 0, String( left ) );
-  if( right < 10 )
-    matrix.drawString( 11, String( right ) );
-  else
-    matrix.drawString( 7, String( right ) );
+    matrix.drawString( 3, String( number ) );
 }
 
 void setup() {
-  Serial.begin(115200);
+  matrix.drawString( 0, "SC" );
+  matrix.drawString( 7, "AN" );
+  Serial.begin(9600);
   Serial.println("===== Setup the Beacon... =====");
 
   chipid = chipid=ESP.getEfuseMac();
 
-  String fried = "fried";
-  String friedmac = fried + String((uint32_t)chipid);
+  String fri3d = "fri3d";
+  String fri3dmac = fri3d + String((uint32_t)chipid);
 
-  Serial.println("My beacon name is: " + friedmac);
+  Serial.println("My beacon name is: " + fri3dmac);
 
-  BLEDevice::init(friedmac.c_str());
+  BLEDevice::init(fri3dmac.c_str());
   BLEServer *pServer = BLEDevice::createServer();
   BLEService *pService = pServer->createService(SERVICE_UUID);
   BLECharacteristic *pCharacteristic = pService->createCharacteristic(
@@ -81,12 +81,10 @@ void loop() {
   int counter=0;
   for (int i=0; i<foundDevices.getCount(); i++) {
      String blename = foundDevices.getDevice(i).getName().c_str();
-     if ( blename.indexOf("fried") == 0 ){
-//         Serial.println(blename);
+     if ( blename.indexOf("fri3d") == 0 ){
          counter++;
      }
   }
-//  Serial.println("\nTotal:\n");
   Serial.println(counter);
-  displayNumbers(0, counter);
+  displayNumber(counter);
 }
