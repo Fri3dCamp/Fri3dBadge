@@ -3,10 +3,16 @@
 
 
 Fri3dButtons::Fri3dButtons() {
+  pinMode( BUTTONBOOT_PIN, INPUT_PULLUP );
   pinMode( BUTTON0_PIN, INPUT_PULLUP );
   pinMode( BUTTON1_PIN, INPUT_PULLUP );
   pinMode( TOUCH0_PIN, INPUT );
   pinMode( TOUCH1_PIN, INPUT );
+}
+
+bool 
+Fri3dButtons::getBootButton() {
+  return 1 - digitalRead( BUTTONBOOT_PIN );
 }
 
 bool 

@@ -1,9 +1,10 @@
 #include "Fri3dServoJewel.h"
 #include "Arduino.h"
-
+#include <Preferences.h>
 
 
 Fri3dServoJewel::Fri3dServoJewel() {
+    preferences.begin("servos", false);
 }
 
 Fri3dServoJewel::~Fri3dServoJewel() {
@@ -11,10 +12,23 @@ Fri3dServoJewel::~Fri3dServoJewel() {
 }
 
 void Fri3dServoJewel::attach() {
-    this->servos[0].attach(32);
-    this->servos[1].attach(25);
-    this->servos[2].attach(26);
-    this->servos[3].attach(27);
+    for (int i = 0; i < 4; i++) {
+        this->servos[i].attach(
+            servo_pins[i], 
+            preferences.getUInt(SERVO_MIN[i], MIN_PULSE_WIDTH), 
+            preferences.getUInt(SERVO_MAX[i], MAX_PULSE_WIDTH));
+
+        Serial.print("Servo ");
+        Serial.print(i, DEC);
+        Serial.print(" -> [");
+        Serial.print(preferences.getUInt(SERVO_MIN[i], MIN_PULSE_WIDTH), DEC);
+        Serial.print(" -");
+        Serial.print(preferences.getUInt(SERVO_MAX[i], MAX_PULSE_WIDTH), DEC);
+        Serial.println("]");
+
+        this->angle(i, 90, 8);
+        delay(500);
+    }
 }
 
 void Fri3dServoJewel::detach() {
@@ -35,16 +49,16 @@ void Fri3dServoJewel::angle(int servoId, int toAngle, int speed) {
     for (int i = 1; i <= range; i++) {
         if (toAngle < startPos) {
             this ->servos[servoId].write(startPos - i);
-            Serial.print("servo ");
-            Serial.print(servoId, DEC);
-            Serial.print(": ");
-            Serial.println(startPos + i, DEC);
+            // Serial.print("servo ");
+            // Serial.print(servoId, DEC);
+            // Serial.print(": ");
+            // Serial.println(startPos + i, DEC);
         } else {
             this ->servos[servoId].write(startPos + i);
-            Serial.print("servo ");
-            Serial.print(servoId, DEC);
-            Serial.print(": ");
-            Serial.println(startPos + i, DEC);
+            // Serial.print("servo ");
+            // Serial.print(servoId, DEC);
+            // Serial.print(": ");
+            // Serial.println(startPos + i, DEC);
         }
 
         delay(speed);

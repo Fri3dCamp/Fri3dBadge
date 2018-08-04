@@ -3,9 +3,9 @@
 #define Fri3dLegs_h
 
 #define LEFT_ANKLE 0
-#define LEFT_HIP 1
-#define RIGHT_HIP 2
-#define RIGHT_ANKLE 3
+#define RIGHT_ANKLE 1
+#define LEFT_HIP 2
+#define RIGHT_HIP 3
 
 #define HIP_MAX_ANGLE 110
 #define HIP_MIN_ANGLE 70
@@ -29,6 +29,8 @@ public:
   void attach();
   void detach();
 
+  void reset();
+
 // -- Simple Movements --------------------------------------------------------
 
   void rotateHipToLeft(int leg, int speed);
@@ -41,9 +43,9 @@ public:
 
 // -- Complex Movements -------------------------------------------------------
 
-  void leanToLeft();
-  void straight();
-  void leanToRight();
+  void leanToLeft(int speed);
+  void straight(int speed);
+  void leanToRight(int speed);
 
   // void helloLeft();
   // void helloRight();

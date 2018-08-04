@@ -7,6 +7,12 @@
 #######################################
 
 Fri3dMatrix	KEYWORD1
+Fri3dServo KEYWORD1
+Fri3dLegs KEYWORD1
+Fri3dServoJewel KEYWORD1
+Fri3dBuzzer KEYWORD1
+Fri3dButtons KEYWORD1
+Fri3dAccelerometer KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)

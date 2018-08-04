@@ -1,189 +1,143 @@
-/******************************************************************************
- * The MIT License
- *
- * Copyright (c) 2010, LeafLabs, LLC.
- *
- * Permission is hereby granted, free of charge, to any person
- * obtaining a copy of this software and associated documentation
- * files (the "Software"), to deal in the Software without
- * restriction, including without limitation the rights to use, copy,
- * modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- *****************************************************************************/
+/*
+  Copyright (c) 2017 John K. Bennett. All right reserved.
+  
+  ESP32_Servo.h - Servo library for ESP32 - Version 1
+  Minor modifications have been made to be included into the Fri3dcamp
+  badge repository
+  
+  Original Servo.h written by Michael Margolis in 2009
+  
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Lesser General Public
+  License as published by the Free Software Foundation; either
+  version 2.1 of the License, or (at your option) any later version.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Lesser General Public License for more details.
+  You should have received a copy of the GNU Lesser General Public
+  License along with this library; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
 
- /*
- * Arduino srl - www.arduino.org
- * Base on lib for stm32f4 (d2a4a47): https://github.com/arduino-libraries/Servo/blob/master/src/stm32f4/ServoTimers.h
- * 2017 Jul 5: Edited by Jaroslav Páral (jarekparal) - paral@robotikabrno.cz
+/* 
+  A servo is activated by creating an instance of the Servo class, and passing 
+  the desired GPIO pin to the attach() method.
+  The servos are pulsed in the background using the value most recently 
+  written using the write() method.
+  The class methods are:
+    Servo - Class for manipulating servo motors connected to ESP32 pins.
+    int attach(pin )  - Attaches the given GPIO pin to the next free channel
+        (channels that have previously been detached are used first), 
+        returns channel number or 0 if failure. All pin numbers are allowed,
+        but only pins 2,4,12-19,21-23,25-27,32-33 are recommended.
+    int attach(pin, min, max  ) - Attaches to a pin setting min and max 
+        values in microseconds; enforced minimum min is 500, enforced max
+        is 2500. Other semantics same as attach().
+    void write () - Sets the servo angle in degrees; a value below 500 is
+        treated as a value in degrees (0 to 180). These limit are enforced,
+        i.e., values are treated as follows:
+            Value                                   Becomes
+            -----                                   -------
+            < 0                                        0
+            0 - 180                             value (treated as degrees)
+            181 - 499                                 180
+            500 - (min-1)                             min
+            min-max (from attach or default)    value (treated as microseconds)
+            (max+1) - 2500                            max
+    
+    void writeMicroseconds() - Sets the servo pulse width in microseconds.
+        min and max are enforced (see above). 
+    int read() - Gets the last written servo pulse width as an angle between 0 and 180. 
+    int readMicroseconds()   - Gets the last written servo pulse width in microseconds.
+    bool attached() - Returns true if this servo instance is attached. 
+    void detach() - Stops an the attached servo, frees its attached pin, and frees
+        its channel for reuse). 
+    
+    *** ESP32-specific functions **
+    setTimerWidth(value) - Sets the PWM timer width (must be 16-20) (ESP32 ONLY);
+        as a side effect, the pulse width is recomputed.
+    int readTimerWidth() - Gets the PWM timer width (ESP32 ONLY) 
  */
+ 
+#ifndef ESP32_Servo_h
+#define ESP32_Servo_h
 
-#pragma once
+// Values for TowerPro MG995 large servos (and many other hobbyist servos)
+#define DEFAULT_uS_LOW 850        // 1000us
+#define DEFAULT_uS_HIGH 2700      // 2000us
 
-#include "Arduino.h"
+// Values for TowerPro SG90 small servos
+//#define DEFAULT_uS_LOW 400
+//#define DEFAULT_uS_HIGH 2400
 
-class Fri3dServo {
-    // Default min/max pulse widths (in microseconds) and angles (in
-    // degrees).  Values chosen for Arduino compatibility.  These values
-    // are part of the public API; DO NOT CHANGE THEM.
-    static const int MIN_ANGLE = 0;
-    static const int MAX_ANGLE = 180;
-    
-    static const int MIN_PULSE_WIDTH = 544;     // the shortest pulse sent to a servo
-    static const int MAX_PULSE_WIDTH = 2400;     // the longest pulse sent to a servo
-    // static const int MIN_PULSE_WIDTH = 200;     // the shortest pulse sent to a servo
-    // static const int MAX_PULSE_WIDTH = 1100;     // the longest pulse sent to a servo
+#define DEFAULT_TIMER_WIDTH 16
+#define DEFAULT_TIMER_WIDTH_TICKS 65536
 
-    static const int MAX_COMPARE = ((1 << 16) - 1); // 65535
-    
-    static const int TAU_MSEC = 20;
-    static const int TAU_USEC = (TAU_MSEC * 1000);
+#define ESP32_Servo_VERSION           1     // software version of this library
 
-    static const int CHANNEL_MAX_NUM = 16;
+#define MIN_PULSE_WIDTH       200     // the shortest pulse sent to a servo  
+#define MAX_PULSE_WIDTH      6000     // the longest pulse sent to a servo 
+#define DEFAULT_PULSE_WIDTH  1500     // default pulse width when servo is attached
+#define DEFAULT_PULSE_WIDTH_TICKS 4825
+#define REFRESH_CPS            60
+#define REFRESH_USEC         20000
 
+#define MAX_SERVOS              16     // no. of PWM channels in ESP32
+
+/*
+* This group/channel/timmer mapping is for information only;
+* the details are handled by lower-level code
+*
+* LEDC Chan to Group/Channel/Timer Mapping
+** ledc: 0  => Group: 0, Channel: 0, Timer: 0
+** ledc: 1  => Group: 0, Channel: 1, Timer: 0
+** ledc: 2  => Group: 0, Channel: 2, Timer: 1
+** ledc: 3  => Group: 0, Channel: 3, Timer: 1
+** ledc: 4  => Group: 0, Channel: 4, Timer: 2
+** ledc: 5  => Group: 0, Channel: 5, Timer: 2
+** ledc: 6  => Group: 0, Channel: 6, Timer: 3
+** ledc: 7  => Group: 0, Channel: 7, Timer: 3
+** ledc: 8  => Group: 1, Channel: 0, Timer: 0
+** ledc: 9  => Group: 1, Channel: 1, Timer: 0
+** ledc: 10 => Group: 1, Channel: 2, Timer: 1
+** ledc: 11 => Group: 1, Channel: 3, Timer: 1
+** ledc: 12 => Group: 1, Channel: 4, Timer: 2
+** ledc: 13 => Group: 1, Channel: 5, Timer: 2
+** ledc: 14 => Group: 1, Channel: 6, Timer: 3
+** ledc: 15 => Group: 1, Channel: 7, Timer: 3
+*/
+
+class Fri3dServo
+{
 public:
-    static const int CHANNEL_NOT_ATTACHED = -1;
+  Fri3dServo();
+  // Arduino Servo Library calls
+  int attach(int pin);                   // attach the given pin to the next free channel, returns channel number or 0 if failure
+  int attach(int pin, int min, int max); // as above but also sets min and max values for writes. 
+  void detach();
+  void setBoundaries(int min, int max);
+  void write(int value);                 // if value is < MIN_PULSE_WIDTH its treated as an angle, otherwise as pulse width in microseconds 
+  void writeMicroseconds(int value);     // Write pulse width in microseconds 
+  int read();                            // returns current pulse width as an angle between 0 and 180 degrees
+  int readMicroseconds();                // returns current pulse width in microseconds for this servo
+  bool attached();                       // return true if this servo is attached, otherwise false  
+  
+  // ESP32 only functions
+  void setTimerWidth(int value);     // set the PWM timer width (ESP32 ONLY)
+  int readTimerWidth();              // get the PWM timer width (ESP32 ONLY)  
 
-    // Pin number of unattached pins
-    static const int PIN_NOT_ATTACHED = -1;
-    
-    /**
-     * @brief Construct a new Fri3dServo instance.
-     *
-     * The new instance will not be attached to any pin.
-     */
-    Fri3dServo();
-
-    /**
-     * @brief Destruct a Fri3dServo instance.
-     *
-     * Call _() and detach().
-     */
-    ~Fri3dServo();
-
-     /**
-     * @brief Associate this instance with a servomotor whose input is
-     *        connected to pin.
-
-     * @param pin Pin connected to the servo pulse wave input. This
-     *            pin must be capable of PWM output (all ESP32 pins).
-     *
-     * @param minPulseWidth Minimum pulse width to write to pin, in
-     *                      microseconds.  This will be associated
-     *                      with a minAngle degree angle.  Defaults to
-     *                      MIN_PULSE_WIDTH = 544.
-     *
-     * @param maxPulseWidth Maximum pulse width to write to pin, in
-     *                      microseconds.  This will be associated
-     *                      with a maxAngle degree angle. Defaults to
-     *                      MAX_PULSE_WIDTH = 2400.
-     *
-     * @param minAngle Target angle (in degrees) associated with
-     *                 minPulseWidth.  Defaults to
-     *                 MIN_ANGLE = 0.
-     *
-     * @param maxAngle Target angle (in degrees) associated with
-     *                 maxPulseWidth.  Defaults to
-     *                 MAX_ANGLE = 180.
-     *
-     * @sideeffect May set pinMode(pin, PWM).
-     *
-     * @return true if successful, false when pin doesn't support PWM.
-     */
-    bool attach(int pin, int channel = CHANNEL_NOT_ATTACHED, 
-                int minAngle = MIN_ANGLE, int maxAngle = MAX_ANGLE, 
-                int minPulseWidth = MIN_PULSE_WIDTH, int maxPulseWidth = MAX_PULSE_WIDTH);
-
-    /**
-     * @brief Stop driving the servo pulse train.
-     *
-     * If not currently attached to a motor, this function has no effect.
-     *
-     * @return true if this call did anything, false otherwise.
-     */
-    bool detach();
-
-    /**
-     * @brief Set the servomotor target angle.
-     *
-     * @param angle Target angle, in degrees.  If the target angle is
-     *              outside the range specified at attach() time, it
-     *              will be clamped to lie in that range.
-     *
-     * @see Fri3dServo::attach()
-     */
-    void write(int degrees);
-
-    /**
-     * @brief Set the pulse width, in microseconds.
-     *
-     * @param pulseWidth Pulse width to send to the servomotor, in
-     *                   microseconds. If outside of the range
-     *                   specified at attach() time, it is clamped to
-     *                   lie in that range.
-     *
-     * @see Fri3dServo::attach()
-     */
-    void writeMicroseconds(int pulseUs);
-
-    /**
-     * Get the servomotor's target angle, in degrees.  This will
-     * lie inside the range specified at attach() time.
-     *
-     * @see Fri3dServo::attach()
-     */
-    int read();
-
-    /**
-     * Get the current pulse width, in microseconds.  This will
-     * lie within the range specified at attach() time.
-     *
-     * @see Fri3dServo::attach()
-     */
-    int readMicroseconds();
-    
-    /**
-     * @brief Check if this instance is attached to a servo.
-     * @return true if this instance is attached to a servo, false otherwise.
-     * @see Fri3dServo::attachedPin()
-     */
-    bool attached() const;
-
-    /**
-     * @brief Get the pin this instance is attached to.
-     * @return Pin number if currently attached to a pin, PIN_NOT_ATTACHED
-     *         otherwise.
-     * @see Fri3dServo::attach()
-     */
-    int attachedPin() const;
-
-
-private:
-    void _resetFields(void);
-
-    int _usToDuty(int us)    { return map(us, 0, TAU_USEC, 0, MAX_COMPARE); }
-    int _dutyToUs(int duty)  { return map(duty, 0, MAX_COMPARE, 0, TAU_USEC); }
-    int _usToAngle(int us)   { return map(us, _minPulseWidth, _maxPulseWidth, _minAngle, _maxAngle); }
-    int _angleToUs(int angle){ return map(angle, _minAngle, _maxAngle, _minPulseWidth, _maxPulseWidth); }
-
-    static int channel_next_free;
-
-    int _pin;
-    int _pulseWidthDuty;
-    int _channel;
-    int _min, _max;
-    int _minPulseWidth, _maxPulseWidth;
-    int _minAngle, _maxAngle;
+  private: 
+   int usToTicks(int usec);
+   int ticksToUs(int ticks);
+   static int ServoCount;                             // the total number of attached servos
+   static int ChannelUsed[];                          // used to track whether a channel is in service
+   int servoChannel = 0;                              // channel number for this servo
+   int min = DEFAULT_uS_LOW;                          // minimum pulse width for this servo   
+   int max = DEFAULT_uS_HIGH;                         // maximum pulse width for this servo 
+   int pinNumber = 0;                                 // GPIO pin assigned to this channel
+   int timer_width = DEFAULT_TIMER_WIDTH;             // ESP32 allows variable width PWM timers
+   int ticks = DEFAULT_PULSE_WIDTH_TICKS;             // current pulse width on this channel
+   int timer_width_ticks = DEFAULT_TIMER_WIDTH_TICKS; // no. of ticks at rollover; varies with width
 };
+#endif
