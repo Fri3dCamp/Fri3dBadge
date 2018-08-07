@@ -140,7 +140,7 @@ int Fri3dServo::attach(int pin, int min, int max)
         ledcSetup(this->servoChannel, REFRESH_CPS, this->timer_width); // channel #, 50 Hz, timer width
         ledcAttachPin(this->pinNumber, this->servoChannel);   // GPIO pin assigned to channel        
     }
-    else return 0;  
+    return (0);
 }
 
 void Fri3dServo::detach()
@@ -235,11 +235,11 @@ void Fri3dServo::setTimerWidth(int value)
     // if positive multiply by diff; if neg, divide
     if (widthDifference > 0)
     {
-        this->ticks << widthDifference;
+        this->ticks =this->ticks << widthDifference;
     }
     else
     {
-        this->ticks >> widthDifference;
+        this->ticks =this->ticks >> widthDifference;
     }
     
     this->timer_width = value;
