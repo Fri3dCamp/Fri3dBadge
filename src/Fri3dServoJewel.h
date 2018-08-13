@@ -24,6 +24,7 @@ public:
   void detach();
 
   void center(int servoId);
+  void angle(int servoId, int toAngle);
   void angle(int servoId, int toAngle, int speed);
   void angle(int servoId1, int servoId2, int toAngle, int speed);
 };

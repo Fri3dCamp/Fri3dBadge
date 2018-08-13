@@ -42,6 +42,18 @@ void Fri3dLegs::rotateHipToRight(int leg, int speed) {
     this->servoJewel.angle(servoId, HIP_MAX_ANGLE, speed);
 }
 
+void Fri3dLegs::rotateHipsToLeft(int speed) {
+    this->servoJewel.angle(LEFT_HIP, RIGHT_HIP, HIP_MAX_ANGLE, speed);
+}
+
+void Fri3dLegs::rotateHipsToCenter(int speed) {
+    this->servoJewel.angle(LEFT_HIP, RIGHT_HIP, 90, speed);
+}
+
+void Fri3dLegs::rotateHipsToRight(int speed) {
+    this->servoJewel.angle(LEFT_HIP, RIGHT_HIP, HIP_MIN_ANGLE, speed);
+}
+
 // -- Ankle Tilting -----------------------------------------------------------
 
 void Fri3dLegs::tiltAnkleToLeft(int leg, int speed) {
@@ -62,66 +74,80 @@ void Fri3dLegs::tiltAnkleToRight(int leg, int speed) {
 // -- Leaning -----------------------------------------------------------------
 
 void Fri3dLegs::leanToLeft(int speed) {
+    this->servoJewel.angle(LEFT_ANKLE, ANKLE_MIN_ANGLE);
     this->servoJewel.angle(RIGHT_ANKLE, ANKLE_MIN_ANGLE, speed);
-    this->servoJewel.angle(LEFT_ANKLE, ANKLE_MIN_ANGLE, speed);
 }
 
 void Fri3dLegs::straight(int speed) {
-    this->servoJewel.angle(RIGHT_ANKLE, 90, speed);
     this->servoJewel.angle(LEFT_ANKLE, 90, speed);
+    this->servoJewel.angle(RIGHT_ANKLE, 90, speed);
 }
 
 void Fri3dLegs::leanToRight(int speed) {
+    this->servoJewel.angle(RIGHT_ANKLE, ANKLE_MAX_ANGLE);
     this->servoJewel.angle(LEFT_ANKLE, ANKLE_MAX_ANGLE, speed);
-    this->servoJewel.angle(RIGHT_ANKLE, ANKLE_MAX_ANGLE, speed);
 }
 
 // -- Stepping ----------------------------------------------------------------
 
 void Fri3dLegs::stepForward() {
-    this->leanToRight(8);
-    this->rotateHipToLeft(Fri3dLegs::RIGHT_LEG, 5);
-    this->rotateHipToLeft(Fri3dLegs::LEFT_LEG, 5);
-    this->straight(12);
-
     this->leanToLeft(8);
-    this->rotateHipToCenter(Fri3dLegs::RIGHT_LEG, 5);
-    this->rotateHipToCenter(Fri3dLegs::LEFT_LEG, 5);
-    this->straight(12);
-
-    // leantoright();  
-  
-    // rightfront2center();
-    // center2leftfront();
-    
-    // leanbackright();
-    
-    // checkproximity();
-
-    // leantoleft();
-
-    // leftfront2center();
-    // center2rightfront();
-    
-    // leanbackleft();
-
-    // checkproximity();
-
-    // self.lean_to_right(speed)
-    // self.twist_right(speed)
-    // self.undo_lean_to_right(speed)
-
-    // self.lean_to_left(speed)
-    // self.twist_center(speed)
-    // self.undo_lean_to_left(speed)
+    this->rotateHipsToLeft(4);
+    this->leanToRight(8);
+    this->rotateHipsToCenter(4);
+    this->straight(8);
 }
 
 void Fri3dLegs::stepBackward() {
-    // self.lean_to_right(speed)
-    // self.twist_left(speed)
-    // self.undo_lean_to_right(speed)
+    this->leanToLeft(8);
+    this->rotateHipsToRight(4);
+    this->leanToRight(8);
+    this->rotateHipsToCenter(4);
+    this->straight(8);
+}
 
-    // self.lean_to_left(speed)
-    // self.twist_center(speed)
-    // self.undo_lean_to_left(speed)
+// -- Turning -----------------------------------------------------------------
+
+void Fri3dLegs::turnLeft() {
+    this->leanToRight(8);
+    this->rotateHipToLeft(LEFT_LEG, 4);
+    this->straight(8);
+    this->leanToLeft(8);
+    this->rotateHipToCenter(LEFT_LEG, 4);
+    this->straight(8);
+}
+
+void Fri3dLegs::turnRight() {
+    this->leanToLeft(8);
+    this->rotateHipToRight(RIGHT_LEG, 4);
+    this->straight(8);
+    this->leanToRight(8);
+    this->rotateHipToCenter(RIGHT_LEG, 4);
+    this->straight(8);
+}
+
+// -- Hello -------------------------------------------------------------------
+
+void Fri3dLegs::helloLeft() {
+    this->leanToRight(8);
+    
+    for (int i = 0; i < 4; i++) {
+        this->servoJewel.angle(LEFT_ANKLE, ANKLE_MIN_ANGLE, 8);
+        this->servoJewel.angle(LEFT_ANKLE, ANKLE_MAX_ANGLE, 8);
+    }
+
+    this->servoJewel.angle(LEFT_ANKLE, 90, 8);
+    this->straight(8);
+}
+
+void Fri3dLegs::helloRight() {
+    this->leanToLeft(8);
+    
+    for (int i = 0; i < 4; i++) {
+        this->servoJewel.angle(RIGHT_ANKLE, ANKLE_MIN_ANGLE, 8);
+        this->servoJewel.angle(RIGHT_ANKLE, ANKLE_MAX_ANGLE, 8);
+    }
+
+    this->servoJewel.angle(RIGHT_ANKLE, 90, 8);
+    this->straight(8);
 }

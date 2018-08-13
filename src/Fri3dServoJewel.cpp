@@ -4,7 +4,7 @@
 
 
 Fri3dServoJewel::Fri3dServoJewel() {
-    preferences.begin("servos", false);
+    
 }
 
 Fri3dServoJewel::~Fri3dServoJewel() {
@@ -12,6 +12,9 @@ Fri3dServoJewel::~Fri3dServoJewel() {
 }
 
 void Fri3dServoJewel::attach() {
+    preferences.begin("servos", false);
+    Serial.print("preferences started");
+
     for (int i = 0; i < 4; i++) {
         this->servos[i].attach(
             servo_pins[i], 
@@ -29,6 +32,8 @@ void Fri3dServoJewel::attach() {
         this->angle(i, 90, 8);
         delay(500);
     }
+
+    preferences.end();
 }
 
 void Fri3dServoJewel::detach() {
@@ -38,10 +43,28 @@ void Fri3dServoJewel::detach() {
 }
 
 void Fri3dServoJewel::center(int servoId) {
-    this->servos[servoId].write(90);
+    this->angle(servoId, 90);
+}
+
+void Fri3dServoJewel::angle(int servoId, int toAngle) {
+    Serial.print("moving servo ");
+    Serial.print(servoId, DEC);
+    Serial.print(" to ");
+    Serial.print(toAngle, DEC);
+    Serial.println(" degrees");
+
+    this ->servos[servoId].write(toAngle);
 }
 
 void Fri3dServoJewel::angle(int servoId, int toAngle, int speed) {
+    Serial.print("moving servo ");
+    Serial.print(servoId, DEC);
+    Serial.print(" to ");
+    Serial.print(toAngle, DEC);
+    Serial.print(" degrees using ");
+    Serial.print(speed, DEC);
+    Serial.println("ms. delays");
+
     int startPos = this->servos[servoId].read();
 
     int range = abs(toAngle - startPos);
@@ -49,16 +72,8 @@ void Fri3dServoJewel::angle(int servoId, int toAngle, int speed) {
     for (int i = 1; i <= range; i++) {
         if (toAngle < startPos) {
             this ->servos[servoId].write(startPos - i);
-            // Serial.print("servo ");
-            // Serial.print(servoId, DEC);
-            // Serial.print(": ");
-            // Serial.println(startPos + i, DEC);
         } else {
             this ->servos[servoId].write(startPos + i);
-            // Serial.print("servo ");
-            // Serial.print(servoId, DEC);
-            // Serial.print(": ");
-            // Serial.println(startPos + i, DEC);
         }
 
         delay(speed);
@@ -66,24 +81,39 @@ void Fri3dServoJewel::angle(int servoId, int toAngle, int speed) {
 }
 
 void Fri3dServoJewel::angle(int servoId1, int servoId2, int toAngle, int speed) {
+    Serial.print("moving servo ");
+    Serial.print(servoId1, DEC);
+    Serial.print(" and servo ");
+    Serial.print(servoId2, DEC);
+    Serial.print(" to ");
+    Serial.print(toAngle, DEC);
+    Serial.print(" degrees using ");
+    Serial.print(speed, DEC);
+    Serial.println("ms. delays");
+
     int startPos1 = this->servos[servoId1].read();
     int startPos2 = this->servos[servoId2].read();
 
     int range1 = abs(toAngle - startPos1);
     int range2 = abs(toAngle - startPos2);
 
+    Serial.print("max range: ");
+    Serial.println(max(range1, range2), DEC);
+
     for (int i = 1; i <= max(range1, range2); i++) {
-        if (startPos1 + i <= toAngle) {
-            if (toAngle < startPos1)
+        if (toAngle < startPos1) {
+            if (startPos1 - i > toAngle)
                 this ->servos[servoId1].write(startPos1 - i);
-            else
+        } else {
+            if (startPos1 + i < toAngle)
                 this ->servos[servoId1].write(startPos1 + i);
         }
-        
-        if (startPos2 + i <= toAngle) {
-            if (toAngle < startPos2)
+
+        if (toAngle < startPos2) {
+            if (startPos2 - i > toAngle)
                 this ->servos[servoId2].write(startPos2 - i);
-            else
+        } else {
+            if (startPos2 + i < toAngle)
                 this ->servos[servoId2].write(startPos2 + i);
         }
 

@@ -30,17 +30,27 @@ void readSerial() {
     String in = Serial.readStringUntil('\n');
       
     if (in.startsWith("LL")) {
-      legs.leanToLeft(12);
+      legs.leanToLeft(4);
     } else if (in.startsWith("LR")) {
-      legs.leanToRight(12); 
+      legs.leanToRight(4); 
     } else if (in.startsWith("LC")) {
-      legs.straight(12);
+      legs.straight(4);
     } else if (in.startsWith("F")) {
       legs.stepForward();
     } else if (in.startsWith("B")) {
       legs.stepBackward();  
+    } else if (in.startsWith("TL")) {
+      legs.turnLeft();
+    } else if (in.startsWith("TR")) {
+      legs.turnRight();  
+    } else if (in.startsWith("HL")) {
+      legs.helloLeft();
+    } else if (in.startsWith("HR")) {
+      legs.helloRight();
     } else if (in.startsWith("R")) {
       legs.reset(); 
+    } else if (in.startsWith("D")) {
+      legs.detach();
     } else {
       Serial.println("Unknown command");
     }
