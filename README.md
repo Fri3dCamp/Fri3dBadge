@@ -13,30 +13,15 @@ Download this repo as a .ZIP file and install it, similar to other Arduino libra
 ESP32 support for Arduino IDE can be added through Arduino IDE or by manually installing it, platform specific.
 
 #### Arduino IDE
+The arduino-esp32 project released support for installing the ESP directly from the boardsmanager of the arduino IDE. You can find detailed instructions at https://github.com/espressif/arduino-esp32/blob/master/docs/arduino-ide/boards_manager.md
 
-* Add https://raw.githubusercontent.com/jantje/arduino-esp32/master/package/package_Espressif_esp32_index.json to the `Additional Board Manager URLs` inside Arduino Software (IDE) Preferences, as described on https://www.arduino.cc/en/Guide/Cores under `How to install a third party core`.
-* Go to board manager (as described on https://www.arduino.cc/en/Guide/Cores)
-* Search for ESP32 and install
+This should work for windows, linux and mac users.
 
 Possibly when compiling, you get BLE and ESP32_AzureIoT_Arduino error. This can be fixed by installing these manually.
 Libraries can be downloaded from (as defined on https://github.com/espressif/arduino-esp32/tree/master/libraries):
 * https://github.com/VSChina/ESP32_AzureIoT_Arduino/archive/67dfa4f31ef88b0938dd87d955612100dea5562e.zip
 * https://github.com/nkolban/ESP32_BLE_Arduino/archive/7951347ed68313d75c367e1f2cce763cb56d1eb2.zip
 These should be put in the respective folders under \Arduino15\packages\Espressif\hardware\esp32\1.0.1\libraries
-
-#### Windows users
-
-Download the repo from https://github.com/espressif/arduino-esp32 as a .ZIP file and unzip it to an `espressif/esp32` directory in your `Mydocuments\Arduino\hardware` folder.
-
-Run `get.exe` (make sure to run this as administrator), found in the `esp32/tools` folder.
-
-#### Mac and Linux users
-
-Download the repo from https://github.com/espressif/arduino-esp32 as a .ZIP file and unzip it to an `espressif/esp32` directory in your Home directory.
-
-Run the `tools/get.py` python script to download the tools. Using a terminal, navigate to the `esp32/tools` folder and run `python get.py`.
-
-The `get.py` python script will download the Xtensa GNU tools and the ESP32 software development kit (SDK), and unzip them to the proper location. You should see a few new folders in the `tools` directory, including `sdk` and `xtensa-esp32-elf` once it’s done.
 
 ## Usage
 
