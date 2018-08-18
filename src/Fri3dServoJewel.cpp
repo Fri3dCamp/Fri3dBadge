@@ -13,7 +13,6 @@ Fri3dServoJewel::~Fri3dServoJewel() {
 
 void Fri3dServoJewel::attach() {
     preferences.begin("servos", false);
-    Serial.print("preferences started");
 
     for (int i = 0; i < 4; i++) {
         this->servos[i].attach(
