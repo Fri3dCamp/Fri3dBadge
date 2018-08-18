@@ -4,15 +4,11 @@ This library offers simple interfaces to the hardware peripherals on the Fri3d C
 
 ## Installation
 
-### Arduino Library for the Fri3d Camp badge
+Installation is two-fold, first of all you need to install support for the Fri3d Badge. The badge carries an ESP32, so we need to install support for the ESP32 boards.
 
-Download this repo as a .ZIP file and install it, similar to other Arduino libraries: https://www.arduino.cc/en/Guide/Libraries#toc4
+The second step is to install the arduino library holding all the utility functions etc for the Fri3dBadge.
 
-### ESP32 Board for the Fri3d Camp badge
-
-ESP32 support for Arduino IDE can be added through Arduino IDE or by manually installing it, platform specific.
-
-#### Arduino IDE
+### Arduino IDE
 The arduino-esp32 project released support for installing the ESP directly from the boardsmanager of the arduino IDE. You can find detailed instructions at https://github.com/espressif/arduino-esp32/blob/master/docs/arduino-ide/boards_manager.md
 
 This should work for windows, linux and mac users.
@@ -23,8 +19,10 @@ Libraries can be downloaded from (as defined on https://github.com/espressif/ard
 * https://github.com/nkolban/ESP32_BLE_Arduino/archive/7951347ed68313d75c367e1f2cce763cb56d1eb2.zip
 These should be put in the respective folders under \Arduino15\packages\Espressif\hardware\esp32\1.0.1\libraries
 
-## Usage
+### Arduino Library for the Fri3d Camp badge
+Download this repo as a .ZIP file and install it, similar to other Arduino libraries: https://www.arduino.cc/en/Guide/Libraries#toc4
 
+## Usage
 When the ESP32 board and this library have been installed, the ESP boards (under `Tools/Board`) and Fri3d Camp Badge examples (under `File/Examples`) should be available in your Arduino IDE.
 
 In order to flash code to your badge:
