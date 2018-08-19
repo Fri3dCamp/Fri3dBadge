@@ -8,6 +8,8 @@ Installation is two-fold, first of all you need to install support for the Fri3d
 
 The second step is to install the arduino library holding all the utility functions etc for the Fri3dBadge.
 
+Detailed installation instructions can be found at http://wiki2018.fri3d.be/index.php?title=Badge
+
 ### Arduino IDE
 The arduino-esp32 project released support for installing the ESP directly from the boardsmanager of the arduino IDE. You can find detailed instructions at https://github.com/espressif/arduino-esp32/blob/master/docs/arduino-ide/boards_manager.md
 
