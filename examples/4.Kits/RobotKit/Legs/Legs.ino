@@ -129,6 +129,8 @@ void readSerial() {
       legs.reset(); 
     } else if (in.startsWith("D")) {
       legs.detach();
+    } else if (in.startsWith("A")) {
+      legs.attach();
     } else {
       Serial.println("Unknown command");
     }
