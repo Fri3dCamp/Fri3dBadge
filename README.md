@@ -4,19 +4,16 @@ This library offers simple interfaces to the hardware peripherals on the Fri3d C
 
 ## Installation
 
-### Arduino Library for the Fri3d Camp badge
+Installation is two-fold, first of all you need to install support for the Fri3d Badge. The badge carries an ESP32, so we need to install support for the ESP32 boards.
 
-Download this repo as a .ZIP file and install it, similar to other Arduino libraries: https://www.arduino.cc/en/Guide/Libraries#toc4
+The second step is to install the arduino library holding all the utility functions etc for the Fri3dBadge.
 
-### ESP32 Board for the Fri3d Camp badge
+Detailed installation instructions can be found at http://wiki2018.fri3d.be/index.php?title=Badge
 
-ESP32 support for Arduino IDE can be added through Arduino IDE or by manually installing it, platform specific.
+### Arduino IDE
+The arduino-esp32 project released support for installing the ESP directly from the boardsmanager of the arduino IDE. You can find detailed instructions at https://github.com/espressif/arduino-esp32/blob/master/docs/arduino-ide/boards_manager.md
 
-#### Arduino IDE
-
-* Add https://raw.githubusercontent.com/jantje/arduino-esp32/master/package/package_Espressif_esp32_index.json to the `Additional Board Manager URLs` inside Arduino Software (IDE) Preferences, as described on https://www.arduino.cc/en/Guide/Cores under `How to install a third party core`.
-* Go to board manager (as described on https://www.arduino.cc/en/Guide/Cores)
-* Search for ESP32 and install
+This should work for windows, linux and mac users.
 
 Possibly when compiling, you get BLE and ESP32_AzureIoT_Arduino error. This can be fixed by installing these manually.
 Libraries can be downloaded from (as defined on https://github.com/espressif/arduino-esp32/tree/master/libraries):
@@ -24,22 +21,10 @@ Libraries can be downloaded from (as defined on https://github.com/espressif/ard
 * https://github.com/nkolban/ESP32_BLE_Arduino/archive/7951347ed68313d75c367e1f2cce763cb56d1eb2.zip
 These should be put in the respective folders under \Arduino15\packages\Espressif\hardware\esp32\1.0.1\libraries
 
-#### Windows users
-
-Download the repo from https://github.com/espressif/arduino-esp32 as a .ZIP file and unzip it to an `espressif/esp32` directory in your `Mydocuments\Arduino\hardware` folder.
-
-Run `get.exe` (make sure to run this as administrator), found in the `esp32/tools` folder.
-
-#### Mac and Linux users
-
-Download the repo from https://github.com/espressif/arduino-esp32 as a .ZIP file and unzip it to an `espressif/esp32` directory in your Home directory.
-
-Run the `tools/get.py` python script to download the tools. Using a terminal, navigate to the `esp32/tools` folder and run `python get.py`.
-
-The `get.py` python script will download the Xtensa GNU tools and the ESP32 software development kit (SDK), and unzip them to the proper location. You should see a few new folders in the `tools` directory, including `sdk` and `xtensa-esp32-elf` once it’s done.
+### Arduino Library for the Fri3d Camp badge
+Download this repo as a .ZIP file and install it, similar to other Arduino libraries: https://www.arduino.cc/en/Guide/Libraries#toc4
 
 ## Usage
-
 When the ESP32 board and this library have been installed, the ESP boards (under `Tools/Board`) and Fri3d Camp Badge examples (under `File/Examples`) should be available in your Arduino IDE.
 
 In order to flash code to your badge:
