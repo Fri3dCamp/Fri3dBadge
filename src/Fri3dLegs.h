@@ -10,8 +10,8 @@
 #define HIP_MAX_ANGLE 120
 #define HIP_MIN_ANGLE 60
 
-#define ANKLE_MAX_ANGLE 110
-#define ANKLE_MIN_ANGLE 70
+#define ANKLE_MAX_ANGLE 120
+#define ANKLE_MIN_ANGLE 60
 
 #include "Fri3dServoJewel.h"
 
