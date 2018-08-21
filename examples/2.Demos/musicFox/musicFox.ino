@@ -31,21 +31,15 @@ String s1 = "WE LOVED FRI3D CAMP 2018!";
 
 // Happy Birthday
 const int number_of_notes2 = 25;
-int notes_sequence2 [ number_of_notes2 ] = { 14, 14, 16, 14, 19, 17,
+int notes_sequence2 [ number_of_notes2 ] = { 14, 14, 16, 14, 19, 18,
                                              14, 14, 16, 14, 21, 19,
-                                             14, 14, 24, 23, 19, 17, 16,
-                                             23, 23, 21, 19, 21, 19 };
+                                             14, 14, 26, 23, 19, 18, 16,
+                                             24, 24, 23, 19, 21, 19 };
 float notes_duration2 [ number_of_notes2 ] = { 0.75, 0.25, 1.0, 1.0, 1.0, 2.0,
                                                0.75, 0.25, 1.0, 1.0, 1.0, 2.0,
                                                0.75, 0.25, 1.0, 1.0, 1.0, 1.0, 2.0,
                                                0.75, 0.25, 1.0, 1.0, 1.0, 2.0 };
 String s2 = "HAPPY BIRTHDAY BENNY!";
-
-void setColumn ( int column, int number_of_rows, int on_off ) {
-  for ( int i = 0; i < number_of_rows; i++ ) {
-    matrix.setPixel ( column, i, on_off );
-  }
-}
 
 void setup() {
   buzzer.setVolume( 0 );
@@ -59,7 +53,10 @@ void loop() {
   int note;
   int melody;
   String s;
-  while (!buttons.getButton( 0 ) and !buttons.getButton( 1 )) { delay ( 10 ); }
+  while (!buttons.getButton( 0 ) and !buttons.getButton( 1 )) { 
+    matrix.setPixel( rand() % 14, rand() % 5, rand() % 2 );
+    delay ( 10 ); 
+  }
   if (buttons.getButton( 0 )) { 
     melody = 1;
     number_of_notes = number_of_notes1;
@@ -80,7 +77,6 @@ void loop() {
     buzzer.setFrequency( frequencies[note] );
     matrix.clear();
     matrix.drawString( 0, notenames[note] );
-    setColumn ( note - 13, 5, 1 ); 
     delay( 500 * *(notes_duration + i) );
     buzzer.setVolume(0);
     matrix.clear(); 
