@@ -70,6 +70,8 @@ void startBLEBeacon() {
 void setup() {
   Serial.begin(9600);
   
+  accel.begin();
+  
   buzzer.setVolume( 255 );
   buzzer.setFrequency( 600 );
   delay( 120 );

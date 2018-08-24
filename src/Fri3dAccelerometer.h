@@ -12,6 +12,8 @@ protected:
 public:
   Fri3dAccelerometer();
   
+  void begin();
+  
   bool getEvent(sensors_event_t *event);
 
   void displaySensorDetails(void);

@@ -8,6 +8,7 @@ Fri3dMatrix matrix = Fri3dMatrix();
 
 void setup() {
   Serial.begin(9600);
+  accel.begin();
 }
 
 void loop() {

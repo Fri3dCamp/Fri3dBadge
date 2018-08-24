@@ -4,6 +4,7 @@ Fri3dAccelerometer accel = Fri3dAccelerometer();
 
 void setup() {
   Serial.begin(9600);
+  accel.begin();
 }
 
 void loop() {

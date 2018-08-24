@@ -2,6 +2,10 @@
 #include "Arduino.h"
 
 Fri3dAccelerometer::Fri3dAccelerometer() {
+}
+
+void 
+Fri3dAccelerometer::begin() {
   adxl345 = Adafruit_ADXL345_Unified(12345);
   if(!adxl345.begin())
   {
