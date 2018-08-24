@@ -30,6 +30,7 @@ uint8_t         backbuffer = 0,      // Index for double-buffered animation
 // SETUP - RUNS ONCE AT PROGRAM START --------------------------------------
 
 void setup(void) {
+  accelerometer.begin();
   uint8_t i, j, bytes;
 
   memset(img, 0, sizeof(img)); // Clear the img[] array
