@@ -49,8 +49,8 @@ uint8_t font[ 96 * 3 ] = {
   0x08, 0x10, 0x0F,  // J
   0x1F, 0x04, 0x1B,  // K
   0x1F, 0x10, 0x10,  // L
-  0x1F, 0x06, 0x1F,  // M
-  0x1C, 0x04, 0x1C,  // N
+  0x1F, 0x02, 0x1F,  // M
+  0x1F, 0x01, 0x1E,  // N
   0x1F, 0x11, 0x1F,  // O
   0x1F, 0x05, 0x07,  // P
   0x0E, 0x19, 0x1E,  // Q
@@ -82,7 +82,7 @@ uint8_t font[ 96 * 3 ] = {
   0x1F, 0x0C, 0x1A,  // k
   0x00, 0x1F, 0x00,  // l
   0x18, 0x0C, 0x18,  // m
-  0x18, 0x04, 0x18,  // n
+  0x1C, 0x04, 0x18,  // n
   0x1E, 0x12, 0x1E,  // o
   0x1F, 0x05, 0x07,  // p
   0x07, 0x05, 0x1F,  // q
@@ -150,7 +150,7 @@ void Fri3dMatrix::drawString(int x_offset, String s, int value) {
 
 void Fri3dMatrix::render( int delay ) const {
   for( int row = 0; row < 5; row++ ) {
-    
+
     // send right eye
     for( int i = 0; i < 7; i++ ) {
       shiftIntoRegister( 1 - buffer[ row ][ 13 - i ] );
@@ -161,7 +161,7 @@ void Fri3dMatrix::render( int delay ) const {
       else
         shiftIntoRegister( 0 );
     }
-    
+
     // send left eye
     for( int i = 0; i < 7; i++ ) {
       shiftIntoRegister( 1 - buffer[ row ][ 6 - i ] );
@@ -172,10 +172,10 @@ void Fri3dMatrix::render( int delay ) const {
       else
         shiftIntoRegister( 0 );
     }
-      
+
     digitalWrite( LATCH_PIN, 0 );
     digitalWrite( LATCH_PIN, 1 );
-    
+
     vTaskDelay( delay );
   }
 }
@@ -209,4 +209,3 @@ void Fri3dMatrix::shiftIntoRegister( int b ) const {
   digitalWrite( CLOCK_PIN, 1 );
   digitalWrite( CLOCK_PIN, 0 );
 }
-
