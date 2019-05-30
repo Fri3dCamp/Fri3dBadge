@@ -16,7 +16,7 @@ void Fri3dServoJewel::attach() {
 
     for (int i = 0; i < 4; i++) {
         this->servos[i].attach(
-            servo_pins[i], 
+            i, 
             preferences.getUInt(SERVO_MIN[i], MIN_PULSE_WIDTH), 
             preferences.getUInt(SERVO_MAX[i], MAX_PULSE_WIDTH));
 

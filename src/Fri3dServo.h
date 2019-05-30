@@ -83,7 +83,7 @@
 #define REFRESH_CPS            60
 #define REFRESH_USEC         20000
 
-#define MAX_SERVOS              16     // no. of PWM channels in ESP32
+#define MAX_SERVOS              4     // no. of PWM channels in ESP32
 
 /*
 * This group/channel/timmer mapping is for information only;
@@ -128,10 +128,10 @@ public:
   int readTimerWidth();              // get the PWM timer width (ESP32 ONLY)  
 
   private: 
+    int servo_pins[4] = { 32, 25, 26, 27 };
+
    int usToTicks(int usec);
    int ticksToUs(int ticks);
-   static int ServoCount;                             // the total number of attached servos
-   static int ChannelUsed[];                          // used to track whether a channel is in service
    int servoChannel = 0;                              // channel number for this servo
    int min = DEFAULT_uS_LOW;                          // minimum pulse width for this servo   
    int max = DEFAULT_uS_HIGH;                         // maximum pulse width for this servo 

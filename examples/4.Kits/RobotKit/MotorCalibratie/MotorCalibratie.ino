@@ -201,7 +201,7 @@ void processButtonBoot() {
     max_pulse_width = preferences.getUInt(SERVO_MAX[currentServo], MAX_PULSE_WIDTH);
     
     // -- enable the selected servo
-    servo.attach(servo_pins[currentServo], min_pulse_width, max_pulse_width);
+    servo.attach(currentServo, min_pulse_width, max_pulse_width);
     
     // -- go to the minimal postion
     servo.write(0);
@@ -243,4 +243,3 @@ void processButtonBoot() {
 
   render();
 }
-

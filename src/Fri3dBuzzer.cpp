@@ -2,8 +2,8 @@
 #include "Arduino.h"
 
 Fri3dBuzzer::Fri3dBuzzer() {
-  ledcSetup( 0, 3000, 8 );
-  setVolume( 255 );
+  ledcSetup( 5, 3000, 8 );
+  setVolume( 0 );
   ledcAttachPin(33, 0);
 }
 
