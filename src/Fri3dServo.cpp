@@ -190,7 +190,9 @@ void Fri3dServo::writeMicroseconds(int value)
             value = this->max;
 
         value = usToTicks(value);  // convert to ticks
+
         this->ticks = value;
+
         // do the actual write
         ledcWrite(this->servoChannel, this->ticks);
     }
@@ -262,10 +264,30 @@ int Fri3dServo::readTimerWidth()
 
 int Fri3dServo::usToTicks(int usec)
 {
-    return (int)((float)usec / ((float)REFRESH_USEC / (float)this->timer_width_ticks));   
+    // Serial.print("usec: ");
+    // Serial.println(usec, DEC);
+
+    // Serial.print("REFRESH_USEC: ");
+    // Serial.println((float) REFRESH_USEC, DEC);
+
+    // Serial.print("timer_width_ticks: ");
+    // Serial.println(this->timer_width_ticks, DEC);
+
+    // Serial.print("timer_width_ticks: ");
+    // Serial.println((float) this->timer_width_ticks, DEC);
+
+    // Serial.print("((float)REFRESH_USEC / (float)this->timer_width_ticks)): ");
+    // Serial.println(((float)REFRESH_USEC / (float)this->timer_width_ticks), DEC);
+
+    // Serial.print("((float)usec / ((float)REFRESH_USEC / (float)this->timer_width_ticks)): ");
+    // Serial.println(((float)usec / ((float)REFRESH_USEC / (float)this->timer_width_ticks)), DEC);
+
+    // doubles have to be used here instead of floats in order to avoid using the FPU. FPU usage in ISR's is not supported
+    return (int)((double)usec / ((double)REFRESH_USEC / (double)this->timer_width_ticks));   
 }
 
 int Fri3dServo::ticksToUs(int ticks)
 {
-    return (int)((float)ticks * ((float)REFRESH_USEC / (float)this->timer_width_ticks)); 
+    // doubles have to be used here instead of floats in order to avoid using the FPU. FPU usage in ISR's is not supported
+    return (int)((double)ticks * ((double)REFRESH_USEC / (double)this->timer_width_ticks)); 
 }

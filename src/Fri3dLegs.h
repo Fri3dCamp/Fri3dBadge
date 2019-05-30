@@ -13,14 +13,28 @@
 #define ANKLE_MAX_ANGLE 120
 #define ANKLE_MIN_ANGLE 60
 
+#include "Fri3dServo.h"
 #include "Fri3dServoJewel.h"
+#include <Preferences.h>
 
 class Fri3dLegs {
 private:
-    Fri3dServoJewel servoJewel;
+    Fri3dServoJewel * jewel = Fri3dServoJewel::getInstance();
+
+    Preferences preferences;
+
+    int rangeLeft[4];
+    int mid[4];
+    int rangeRight[4];
+
+    int servo_pins[4] = { 32, 25, 26, 27 };
+
+    const char* SERVO_MIN[4] = {"s0_legs_min", "s1_legs_min", "s2_legs_min", "s3_legs_min"};
+    const char* SERVO_MID[4] = {"s0_legs_mid", "s1_legs_mid", "s2_legs_mid", "s3_legs_mid"};
+    const char* SERVO_MAX[4] = {"s0_legs_max", "s1_legs_max", "s2_legs_max", "s3_legs_max"};
 
 public:
-  static const int LEFT_LEG = 0;
+  static const int LEFT_LEG = -1;
   static const int RIGHT_LEG = 1;
 
   Fri3dLegs();
@@ -34,136 +48,81 @@ public:
 // -- Simple Movements --------------------------------------------------------
 
   /**
-   * rotate the hip of the given leg to left.
+   * rotate the hip of the given leg.
    *
    * @param leg   the leg to rotate
    * @param speed the delay in ms to wait between servo steps
    */
-  void rotateHipToLeft(int leg, int speed);
+  void rotateHip(int leg, int pct, int speed);
 
   /**
-   * rotate the hip of the given leg to the center.
-   *
-   * @param leg   the leg to rotate
-   * @param speed the delay in ms to wait between servo steps
-   */
-  void rotateHipToCenter(int leg, int speed);
-
-  /**
-   * rotate the hip of the given leg to right.
-   *
-   * @param leg   the leg to rotate
-   * @param speed the delay in ms to wait between servo steps
-   */
-  void rotateHipToRight(int leg, int speed);
-
-
-  /**
-   * rotate both hips to left.
-   *
-   * @param speed the delay in ms to wait between servo steps
-   */
-  void rotateHipsToLeft(int speed);
-
-  /**
-   * rotate both hips to the center.
-   *
-   * @param speed the delay in ms to wait between servo steps
-   */
-  void rotateHipsToCenter(int speed);
-
-  /**
-   * rotate both hips to right.
-   *
-   * @param speed the delay in ms to wait between servo steps
-   */
-  void rotateHipsToRight(int speed);
-
-
-  /**
-   * tilt the ankle of the given leg to left.
+   * tilt the ankle of the given leg.
    *
    * @param leg   the leg of which to tilt the ankle
    * @param speed the delay in ms to wait between servo steps
    */
-  void tiltAnkleToLeft(int leg, int speed);
+  void tiltAnkle(int leg, int pct, int speed);
 
-  /**
-   * tilt the ankle of the given leg to the center.
-   *
-   * @param leg   the leg of which to tilt the ankle
-   * @param speed the delay in ms to wait between servo steps
-   */
-  void tiltAnkleToCenter(int leg, int speed);
+// // -- Complex Movements -------------------------------------------------------
 
-  /**
-   * tilt the ankle of the given leg to right.
-   *
-   * @param leg   the leg of which to tilt the ankle
-   * @param speed the delay in ms to wait between servo steps
-   */
-  void tiltAnkleToRight(int leg, int speed);
+//   /**
+//    * lean to the left.
+//    *
+//    * @param speed the delay in ms to wait between servo steps
+//    */
+//   void leanToLeft(int speed);
 
-// -- Complex Movements -------------------------------------------------------
+//   /**
+//    * stand up straight.
+//    *
+//    * @param speed the delay in ms to wait between servo steps
+//    */
+//   void straight(int speed);
 
-  /**
-   * lean to the left.
-   *
-   * @param speed the delay in ms to wait between servo steps
-   */
-  void leanToLeft(int speed);
-
-  /**
-   * stand up straight.
-   *
-   * @param speed the delay in ms to wait between servo steps
-   */
-  void straight(int speed);
-
-  /**
-   * lean to the right.
-   *
-   * @param speed the delay in ms to wait between servo steps
-   */
-  void leanToRight(int speed);
+//   /**
+//    * lean to the right.
+//    *
+//    * @param speed the delay in ms to wait between servo steps
+//    */
+//   void leanToRight(int speed);
 
 
-  /**
-   * Say hello with the left foot.
-   *
-   * saying hello means leaning to one side and shaking with the foot on the 
-   * free leg.
-   */
-  void helloLeft();
+//   /**
+//    * Say hello with the left foot.
+//    *
+//    * saying hello means leaning to one side and shaking with the foot on the 
+//    * free leg.
+//    */
+//   void helloLeft();
 
-  /**
-   * Say hello with the right foot.
-   *
-   * saying hello means leaning to one side and shaking with the foot on the 
-   * free leg.
-   */
-  void helloRight();
+//   /**
+//    * Say hello with the right foot.
+//    *
+//    * saying hello means leaning to one side and shaking with the foot on the 
+//    * free leg.
+//    */
+//   void helloRight();
 
 
-  /**
-   * make a single step forward.
-   */
-  void stepForward();
+//   /**
+//    * make a single step forward.
+//    */
+//   void stepForward();
 
-  /**
-   * make a single step backward.
-   */
-  void stepBackward();
+//   /**
+//    * make a single step backward.
+//    */
+//   void stepBackward();
 
-  /**
-   * turn to the left.
-   */
-  void turnLeft();
+//   /**
+//    * turn to the left.
+//    */
+//   void turnLeft();
 
-  /**
-   * turn to the right.
-   */
-  void turnRight();
+//   /**
+//    * turn to the right.
+//    */
+//   void turnRight();
 };
 
 #endif
